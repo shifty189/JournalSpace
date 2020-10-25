@@ -53,17 +53,14 @@ def startProgram():
     datenow = str(datetime.now())
 #if there is no past entrys just show a "new" button otherwise show date (in futere will show past entrys)
     if len(data) > 0:
-        # dateLabel = tk.Label(main, text=datenow[0:10])
-        # dateLabel.grid(row=0, column=0)
         entryDisplay = tk.Frame()
         entryDisplay.grid(row=0, column=0)
         #create buttons for past entries
         for index, x in enumerate(data):
-            # print(x)
-            displaytext = tk.Button(entryDisplay, text = x[1][0:50], command=(lambda data = index: lambda: eViewer(data, main))()).pack()
+            textDate = tk.Label(entryDisplay, text=str(x[0])).grid(row=index, column=0)
+            displaytext = tk.Button(entryDisplay, text = x[1][0:50], command=(lambda data = index: lambda: eViewer(data, main))()).grid(row=index, column=1)
         createButton = tk.Button(main, text='Create Entry', command=lambda: entryWindow(main))
-        createButton.grid(row=1, column=0)
-        # print('larger than 0')
+        createButton.grid(row=1, columnspan=2)
     else:
         # dateLabel = tk.Label(main, text=datenow[0:10])
         # dateLabel.grid(row=0, column=0)
