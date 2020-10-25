@@ -11,12 +11,28 @@ import pickle
 
 # *****************TODO***************
 #
-# create a short display of past entrys, and make it clickable
 #
 # look into using actual encryption for the data file. encoding at the least
-#
-#
 
+
+
+def updateEntry(index, words, window):
+    global data
+    data[index][1] = words
+    pickle.dump(data, open('C:\\Users\\Kyle\\Documents\\JournalSpace\\Data.dat', 'wb'))
+    window.destroy()
+    startProgram()
+    # print(data)
+
+def eViewer(index, window):
+    global data
+    viewerWindow = tk.Tk()
+    entryText = tk.Text(viewerWindow)
+    entryText.insert('1.0', data[index][1])
+    entryText.pack(side='top')
+    updateButton = tk.Button(viewerWindow, text='update', command=lambda: updateEntry(index, entryText.get('1.0', 'end'), viewerWindow))
+    updateButton.pack(side='bottom')
+    window.destroy()
 
 
 #program to start the main user facing window
@@ -41,16 +57,17 @@ def startProgram():
         # dateLabel.grid(row=0, column=0)
         entryDisplay = tk.Frame()
         entryDisplay.grid(row=0, column=0)
-        for i in enumerate(data):
-            displaytext = tk.Button(entryDisplay, text = i[1][1][0:50]).pack()
-            # print(i[1][1][0:50])
-        createButton = tk.Button(main, text='Create Entry', command=entryWindow)
+        #create buttons for past entries
+        for index, x in enumerate(data):
+            # print(x)
+            displaytext = tk.Button(entryDisplay, text = x[1][0:50], command=(lambda data = index: lambda: eViewer(data, main))()).pack()
+        createButton = tk.Button(main, text='Create Entry', command=lambda: entryWindow(main))
         createButton.grid(row=1, column=0)
         # print('larger than 0')
     else:
         # dateLabel = tk.Label(main, text=datenow[0:10])
         # dateLabel.grid(row=0, column=0)
-        createButton = tk.Button(main, text='Create Entry', command=entryWindow)
+        createButton = tk.Button(main, text='Create Entry', command=lambda: entryWindow(main))
         createButton.grid(row=1, column=0)
 
 
@@ -124,14 +141,15 @@ def saveEntry(window):
     data.append(temp)
 
     pickle.dump(data, open('C:\\Users\\Kyle\\Documents\\JournalSpace\\Data.dat', 'wb'))
-    # print('entry saved')
     window.destroy()
+    startProgram()
 
 
 # function for a new journal entry
-def entryWindow():
+def entryWindow(window):
     global tkVar
     global entrytext
+    window.destroy()
     entry = tk.Tk()
 
     textFrame = tk.Frame(entry)
